@@ -15,7 +15,11 @@ param (
 [parameter(Mandatory=$false)]
 [string]$collection = $null,
 [parameter(Mandatory=$false)]
-[string]$artifacts = $null
+[string]$artifacts = $null,
+[parameter(Mandatory=$false)]
+[string]$upload = $null,
+[parameter(Mandatory=$false)]
+[string]$parse = $null
 )
 
 function SANSCollection {
@@ -113,7 +117,12 @@ Write-Host "[*]The evidence generated from KAPE was not present![*]"
 Write-Host ""
 Write-Host "[*] Clean up has been completed. Exiting now... [*]"
 }
+function ParseArtifacts{
 
+}
+function UploadCloud{
+
+}
 
 if ($collection -eq $null -and $artifacts -eq $null){
     Write-Host "You need to specify either a collection or a set of Kape artifacts. Please review the forensics documentation. Below you will find example commands that are compatible with the MDE Live Response Console:"`n`n"run kape.ps1 -parameters `"-collection triage`""`n"run kape.ps1 -parameters `"-collection memory`""`n"run kape.ps1 -parameters `"-collection cleanup`""`n"run kape.ps1 -parameters `"-collection split`""`n"run kape.ps1 -parameters `"-collection all`""`n"run kape.ps1 -parameters `"-collection custom -artifacts RegistryHivesSystem`""
@@ -128,7 +137,6 @@ elseif (-not ($collection -eq $null)) {
         all{
             SANSCollection
             MemoryCollection
-            Zip
         }
         Default{Write-Host "You need to specify either a collection or a set of Kape artifacts. Please review the forensics documentation. Below you will find example commands that are compatible with the MDE Live Response Console:"`n`n"run kape.ps1 -parameters `"-collection triage`" "`n"run kape.ps1 -parameters `"-collection memory`" "`n"run kape.ps1 -parameters `"-collection cleanup`""`n"run kape.ps1 -parameters `"-collection split`""`n"run kape.ps1 -parameters `"-collection all`""`n"run kape.ps1 -parameters `"-collection custom -artifacts RegistryHivesSystem`""} 
 }
