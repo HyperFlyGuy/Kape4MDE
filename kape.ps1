@@ -19,7 +19,7 @@ param (
 [parameter(Mandatory=$false)]
 [string]$upload = $null,
 [parameter(Mandatory=$false)]
-[string]$parse = $null
+[bool]$parse = $null
 )
 
 function SANSCollection {
@@ -40,8 +40,16 @@ function SANSCollection {
     while ($destination.Items().Count -ne $zipFile.Items().Count) {
         Start-Sleep -Seconds 1
     }
-    # Execute the kape.exe with the given parameters
-    C:\kape\kape.exe --tsource C:\ --tdest C:\kape\output --target !SANS_Triage --vhdx Triage 
+        # Execute the kape.exe with the given parameters
+    if($parse = $null){
+        C:\kape\kape.exe --tsource C:\ --tdest C:\kape\output --target !SANS_Triage --vhdx Triage-%m-%d
+    }
+    else{
+        kape.exe --tsource C:\ --tdest C:\kape\output --target !SANS_Triage --module !EZParser --mdest C:\kape\output\parsed  --vhdx Triage-%m-%d
+        Compress-Archive -Path C:\kape\output\parsed -DestinationPath C:\kape\output\parsed_evidence.zip
+    }
+
+
 }
 function MemoryCollection {
     $zipFilePath = "C:\ProgramData\Microsoft\Windows Defender Advanced Threat Protection\Downloads\kape.zip"
@@ -62,9 +70,9 @@ function MemoryCollection {
     while ($destination.Items().Count -ne $zipFile.Items().Count) {
         Start-Sleep -Seconds 1
     }
-    
+
     # Execute the kape.exe with the given parameters
-    C:\kape\kape.exe --tsource C:\ --tdest C:\kape\output --mdest C:\kape\output\memory  --target MemoryFiles --zip  --module MagnetForensics_RAMCapture    
+    C:\kape\kape.exe --tsource C:\ --tdest C:\kape\output --mdest C:\kape\output\memory  --target MemoryFiles-%m-%d --zip  --module MagnetForensics_RAMCapture    
 }
 function CustomArtifactCollection {
     $zipFilePath = "C:\ProgramData\Microsoft\Windows Defender Advanced Threat Protection\Downloads\kape.zip"
@@ -85,7 +93,7 @@ function CustomArtifactCollection {
         Start-Sleep -Seconds 1
     }
     # Execute the kape.exe with the given parameters
-    C:\kape\kape.exe --tsource C:\ --tdest C:\kape\output --vhdx Triage --target $Artifacts  
+    C:\kape\kape.exe --tsource C:\ --tdest C:\kape\output --vhdx Custom-%m-%d --target $Artifacts  
 }
 function Split {
 #Handles all the zipping functionality
@@ -116,9 +124,6 @@ Write-Host "[*]The evidence generated from KAPE was not present![*]"
 }
 Write-Host ""
 Write-Host "[*] Clean up has been completed. Exiting now... [*]"
-}
-function ParseArtifacts{
-
 }
 function UploadCloud{
 

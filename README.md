@@ -75,3 +75,13 @@ It was requested that a custom collection feature be implemented with the KAPE M
 - If you expect commands to take a longer amount of time it is a good idea to append an "&" to the end of the command. This forces the command to run in the background and will prevent a connection timeout. 
     - This should be used for the Split, all, and getfile commands. 
     - "fg <action GUID>" will bring the command to the foreground. 
+
+## UPDATES!
+
+### Parsed Triage Evidence
+
+I have added a functionality that lets the evidence captured in the "triage" collection to also be parsed by EZParser tools and output to a zip file in the "C:\kape\output\parsed_evidence.zip". This is a result of me trying to make it as quick as possible to get our hands on evidence that is ready for analysis. It will still capture the SANS Triage collection and add it to a VHDX container! The following command should allow you to try out this functionality.
+
+    - run kape.ps1 -parameters "-collection triage -parse true" 
+
+Please note that I have not gotten a chance to try this in a MDE environment yet but it should work ith no issues. If you run into a problem feel free to let me know!
